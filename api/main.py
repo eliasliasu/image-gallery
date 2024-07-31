@@ -4,10 +4,10 @@ from flask import Flask, request
 from dotenv import load_dotenv
 
 load_dotenv(dotenv_path="./.env.local")
-print(os.environ.get("UNSPLASH_KEY", ""))
 
 UNSPLASH_KEY = os.environ.get("UNSPLASH_KEY", "")
 UNSPLASH_URL = "https://api.unsplash.com/photos/random"
+DEBUDG=bool(os.environ.get("DEBUG", True))
 
 
 if not UNSPLASH_KEY:
@@ -15,6 +15,7 @@ if not UNSPLASH_KEY:
 
 app = Flask(__name__)
 
+app.config["DEBUG"] = DEBUDG
 
 @app.route("/new-image")
 def new_image():
