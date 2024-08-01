@@ -3,10 +3,6 @@
   "eslint.validate": ["javascript", "javascriptreact", "html"],
   "editor.codeActionsOnSave": { "source.fixAll.eslint": "explicit" },
   "python.poetryPath": "poetry",
-  "python.linting.pycodestyleEnabled": true,
-  "python.linting.pycodestyleArgs": ["--max-line-length=88"],
-  "python.linting.pylintEnabled": true,
-  "python.formatting.provider": "black",
   "[python]": {
     "editor.formatOnType": true
   }
