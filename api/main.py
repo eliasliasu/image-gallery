@@ -3,7 +3,7 @@ import requests
 from flask import Flask, request
 from dotenv import load_dotenv
 from flask_cors import CORS
-from flask import jsonify
+
 
 load_dotenv(dotenv_path="./.env.local")
 
