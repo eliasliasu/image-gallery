@@ -33,6 +33,8 @@ def new_image():
 
     data = response.json()
     return data
+
+
 @app.route("/images", methods=["GET","POST"])
 def images():
     """
