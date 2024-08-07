@@ -1,6 +1,7 @@
 {
   "editor.tabSize": 2,
   "eslint.validate": ["javascript", "javascriptreact", "html"],
+  "eslint.workingDirectories": [{ "mode": "auto" }],
   "editor.codeActionsOnSave": { "source.fixAll.eslint": "explicit" },
   "python.poetryPath": "poetry",
   "[python]": {
