@@ -2,7 +2,7 @@ import axios from 'axios';
 import React from 'react';
 import { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Header, Search, ImageCard, Welcome } from './components';
+import { Header, Search, ImageCard, Welcome, Spinner } from './components'; //this utilizes the index.js in the components folder
 import { Container, Row, Col } from 'react-bootstrap';
 
 // const UNSPLASH_KEY = process.env.REACT_APP_UNSPLASH_KEY;
@@ -11,11 +11,13 @@ const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5050';
 const App = () => {
   const [word, setWord] = useState('');
   const [images, setImages] = useState([]);
+  const [loading, setLoading] = useState(true); // New state for loading
 
   const getSavedImages = async () => {
     try {
       const res = await axios.get(`${API_URL}/images`);
       setImages(res.data || []);
+      setLoading(false); // Set loading to false once the images are retrieved
     } catch (err) {
       console.log(err);
     }
@@ -38,10 +40,6 @@ const App = () => {
 
     setWord('');
   };
-
-  // const handleDeleteImage = (id) => {
-  //   setImages(images.filter((image) => image.id !== id));
-  // };
 
   const handleDeleteImage = async (id) => {
     try {
@@ -73,27 +71,39 @@ const App = () => {
     }
   };
 
+  // conditionally load spinner
+
   return (
     <div className="App">
       <Header title="Images Gallery" />
-      <Search word={word} setWord={setWord} handleSubmit={handleSearchSubmit} />
-      <Container className="mt-4">
-        {images.length ? (
-          <Row xs={1} md={2} lg={3}>
-            {images.map((images, i) => (
-              <Col key={i} className="pb-3">
-                <ImageCard
-                  images={images}
-                  deleteImage={handleDeleteImage}
-                  saveImage={handleSaveImage}
-                />
-              </Col>
-            ))}
-          </Row>
-        ) : (
-          <Welcome />
-        )}
-      </Container>
+      {loading ? (
+        <Spinner />
+      ) : (
+        <>
+          <Search
+            word={word}
+            setWord={setWord}
+            handleSubmit={handleSearchSubmit}
+          />
+          <Container className="mt-4">
+            {images.length ? (
+              <Row xs={1} md={2} lg={3}>
+                {images.map((images, i) => (
+                  <Col key={i} className="pb-3">
+                    <ImageCard
+                      images={images}
+                      deleteImage={handleDeleteImage}
+                      saveImage={handleSaveImage}
+                    />
+                  </Col>
+                ))}
+              </Row>
+            ) : (
+              <Welcome />
+            )}
+          </Container>
+        </>
+      )}
     </div>
   );
 };
