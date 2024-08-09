@@ -56,7 +56,21 @@ def images():
         result = images_collection.insert_one(image)
         inserted_id = result.inserted_id
 
-        return {"image": image, "inserted_id": inserted_id}
+        return {"inserted_id": inserted_id}
+    
+@app.route("/images/<image_id>", methods=["DELETE"])
+def delete(image_id):    
+    try:
+        if request.method == "DELETE":
+        # delete image from the database
+            result = images_collection.delete_one({"_id": image_id})
+            if not result or result.deleted_count == 0:
+                return {"message": "Image was not deleted. Please try again"}, 500
+            if result and not result.deleted_count:
+                return {"message": "Image not found"}, 404
+            return {"deleted_id": image_id} 
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 if __name__ == "__main__":
