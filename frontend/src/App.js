@@ -1,5 +1,7 @@
 import axios from 'axios';
 import React from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Header, Search, ImageCard, Welcome, Spinner } from './components'; //this utilizes the index.js in the components folder
@@ -18,8 +20,10 @@ const App = () => {
       const res = await axios.get(`${API_URL}/images`);
       setImages(res.data || []);
       setLoading(false); // Set loading to false once the images are retrieved
+      toast.success('saved images downloaded');
     } catch (err) {
       console.log(err);
+      toast.error(err.message);
     }
   };
 
@@ -34,8 +38,10 @@ const App = () => {
       const res = await axios.get(`${API_URL}/new-image?query=${word}`);
 
       setImages([{ ...res.data, title: word }, ...images]);
+      toast.info(`New image ${word.toUpperCase()} was found!`);
     } catch (err) {
       console.log(err);
+      toast.error(err.message);
     }
 
     setWord('');
@@ -46,10 +52,14 @@ const App = () => {
       // Send delete request to the API
       const res = await axios.delete(`${API_URL}/images/${id}`);
       if (res.data?.deleted_id) {
+        toast.warning(
+          `Image ${images.find((i) => i.id === id).title.toUpperCase()} was deleted!`
+        );
         setImages(images.filter((image) => image.id !== id));
       }
     } catch (err) {
       console.log(err);
+      toast.error(err.message);
     }
   };
 
@@ -65,9 +75,11 @@ const App = () => {
             imageToBeSaved.id === id ? { ...image, saved: true } : image
           )
         );
+        toast.info(`Image ${imageToBeSaved.title.toUpperCase()} was saved!`);
       }
     } catch (err) {
       console.log(err);
+      toast.error(err.message);
     }
   };
 
@@ -104,6 +116,7 @@ const App = () => {
           </Container>
         </>
       )}
+      <ToastContainer position="bottom-right" />
     </div>
   );
 };
