@@ -18,7 +18,9 @@ const App = () => {
   const getSavedImages = async () => {
     try {
       const res = await axios.get(`${API_URL}/images`);
-      setImages(res.data || []);
+
+      const reversedImages = (res.data || []).reverse(); // Reverse the order of the images to display the most recent first
+      setImages(reversedImages);
       setLoading(false); // Set loading to false once the images are retrieved
       toast.success('saved images downloaded');
     } catch (err) {
@@ -31,6 +33,7 @@ const App = () => {
     getSavedImages();
   }, []);
 
+  //search for new image from unsplash
   const handleSearchSubmit = async (e) => {
     e.preventDefault();
 
@@ -47,6 +50,14 @@ const App = () => {
     setWord('');
   };
 
+  //remove unsaved images from view
+  const handleRemoveImage = (id) => {
+    const removedImage = images.find((image) => image.id === id);
+    setImages(images.filter((image) => image.id !== id));
+    toast.info(`Image ${removedImage.title?.toUpperCase()} was removed!`);
+  };
+
+  //delete saved image
   const handleDeleteImage = async (id) => {
     try {
       // Send delete request to the API
@@ -63,6 +74,7 @@ const App = () => {
     }
   };
 
+  // save image to database
   const handleSaveImage = async (id) => {
     const imageToBeSaved = images.find((image) => image.id === id);
     imageToBeSaved.saved = true;
@@ -105,6 +117,7 @@ const App = () => {
                     <ImageCard
                       images={images}
                       deleteImage={handleDeleteImage}
+                      removeImage={handleRemoveImage}
                       saveImage={handleSaveImage}
                     />
                   </Col>
